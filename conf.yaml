@@ -1,0 +1,25 @@
+server:
+  network: tcp
+  address: localhost:8888
+client:
+  network: tcp
+  address: localhost:8888
+users:
+  -
+    id: 1000
+    nickname: ivan
+    sex: 0
+    password: 111111
+    auth: 0
+  -
+    id: 1001
+    nickname: test admin
+    sex: 0
+    password: admin
+    auth: 0
+  -
+    id: 1002
+    nickname: test user
+    sex: 1
+    password: user
+    auth: 1
