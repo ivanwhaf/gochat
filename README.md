@@ -2,7 +2,10 @@
 gochat is a go-tcp chatting app
 
 # Getting start
-```go run main.go```
+if you want a server:  
+```go run main.go -mode server```  
+if you want a client:  
+```go run main.go -mode client```
 
 # Version
-* beta 0.0.1: tcp+socket,just can run!
+* beta 0.0.1: tcp socket, finally can run!

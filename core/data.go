@@ -10,8 +10,9 @@ const (
 type Operation int32
 
 const (
-	OperationLogin  Operation = 0
-	OperationLogout Operation = 1
+	OperationLogin     Operation = 0
+	OperationLogout    Operation = 1
+	OperationKeepAlive Operation = 2
 )
 
 type Data struct {

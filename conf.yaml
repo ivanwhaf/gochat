@@ -13,13 +13,13 @@ users:
     auth: 0
   -
     id: 1001
-    nickname: test admin
+    nickname: summer
     sex: 0
-    password: admin
+    password: summer
     auth: 0
   -
     id: 1002
-    nickname: test user
+    nickname: alice
     sex: 1
-    password: user
+    password: alice
     auth: 1
