@@ -8,6 +8,7 @@ import (
 	"gochat/core"
 	"log"
 	"net"
+	"sync"
 	"time"
 )
 
@@ -29,6 +30,7 @@ type Client struct {
 	Friends        map[int32]core.User
 	serverConn     *net.Conn
 	isReconnecting bool
+	rwMutex        sync.RWMutex
 }
 
 func (c *Client) Init(network string, address string) {
@@ -95,28 +97,31 @@ func (c *Client) HandleRead() {
 			if err == nil {
 				c.isReconnecting = false
 				break
-			} else {
-				log.Println("Receive from server error, try to receive again")
-				fmt.Println("Receive from server error, try to receive again")
 			}
+			log.Println("Receive from server error, try to receive again...")
+			fmt.Println("Receive from server error, try to receive again...")
+
 			c.isReconnecting = true
 			time.Sleep(2 * time.Second)
+
 			if i == 5 {
-				log.Println("Lose connection from server, try to reconnect")
-				fmt.Println("Lose connection from server, try to reconnect")
+				log.Println("Lose connection from server, try to reconnect...")
+				fmt.Println("Lose connection from server, try to reconnect...")
 				for {
 					tmpConn, err := c.Connect()
 					if err != nil {
 						continue
 					}
+					c.rwMutex.Lock()
 					c.serverConn = &tmpConn
+					c.rwMutex.Unlock()
 					log.Println("Reconnect to server successfully")
 					fmt.Println("Reconnect to server successfully")
 					isSuccess := c.Login()
-					if !isSuccess {
-						continue
+					if isSuccess {
+						break
 					}
-					break
+					time.Sleep(3 * time.Second)
 				}
 			}
 		}
@@ -134,6 +139,11 @@ func (c *Client) HandleWrite() {
 	var toId int32
 	var message string
 	for {
+		if c.isReconnecting {
+			fmt.Println("Client is reconnecting to server, please wait...")
+			time.Sleep(2 * time.Second)
+			continue
+		}
 		fmt.Println("Please input $id and $message (split by space) :")
 		_, err := fmt.Scanln(&toId, &message)
 		if err != nil {
@@ -146,7 +156,10 @@ func (c *Client) HandleWrite() {
 			DataType: core.DataTypeMessage,
 			Message:  message,
 		}
+
+		c.rwMutex.RLock()
 		err = c.Send(c.serverConn, sendData)
+		c.rwMutex.RUnlock()
 		if err != nil {
 			continue
 		}

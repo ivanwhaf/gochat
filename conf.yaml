@@ -23,3 +23,10 @@ users:
     sex: 1
     password: alice
     auth: 1
+  -
+    id: 1003
+    nickname: bob
+    sex: 0
+    password: bob
+    auth: 1
+    

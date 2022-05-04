@@ -163,7 +163,7 @@ func (s *Server) Serve(conn *net.Conn) {
 }
 
 // CheckOnline check whether user is online every N seconds
-// Delete a user if it isn't online
+// Delete user which isn't online
 func (s *Server) CheckOnline() {
 	tick := time.Tick(5 * time.Second)
 	for {
@@ -207,8 +207,8 @@ func (s *Server) Run() {
 	for {
 		conn, err := listener.Accept()
 		if err != nil {
-			log.Println(err)
-			fmt.Println(err)
+			log.Println("listener accept error", err)
+			fmt.Println("listener accept error", err)
 			continue
 		}
 		log.Println("Accept connection from address:", conn.RemoteAddr())
